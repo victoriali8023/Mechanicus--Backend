@@ -25,18 +25,15 @@ type Mutation {
 
 const resolvers = {
 	Query: {
-		characters: (root, args, context, info) => {
-			return context.prisma.character.findMany();
+		messages: (root, args, context, info) => {
+			return context.prisma.message.findMany();
 		},
 	},
 	Mutation: {
 		post: (root, args, context) => {
-			return context.prisma.character.create({
+			return context.prisma.message.create({
 				data: {
-					name: args.name,
-					species: args.species,
-					affiliation: args.affiliation,
-					weapon: args.weapon,
+					content: args.content,
 				},
 			});
 		},
