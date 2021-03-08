@@ -10,23 +10,17 @@ const prisma = new PrismaClient();
 
 const typeDefs = `
 type Query {
-  characters: [Character!]!
+  messages: [Message!]!
 }
 
-type Character {
-  name: String!,
-  species: String!,
-  affiliation: affiliation!
-  weapon: String!
+type Message {
+  id: Int!,
+  content: String!
 }
 
-enum affiliation {
-  REBEL_ALLIANCE,
-  EMPIRE
-}
 
 type Mutation {
-  post(name: String!, species: String!, affiliation: affiliation!, weapon: String!): Character!
+  post(content:String!): Message!
 }`;
 
 const resolvers = {
