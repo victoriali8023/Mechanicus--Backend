@@ -12,36 +12,33 @@ datasource db {
 //  content String
 // }
 
-model customer {
-  customerID Int @id @default(autoincrement())
-  firstName String
-  lastName String
+model Customer {
+  id Int @id @default(autoincrement())
+  firstName String?
+  lastName String?
   phone String
   email String
   password String
-  streetAddress1 String
-  streetAddress2 String
-  city String
-  state String
-  zipcode Int
+  streetAddress1 String?
+  streetAddress2 String?
+  city String?
+  state String?
+  zipcode Int?
+  vehicles Vehicle[]
 }
 
-model vehicle {
-  vehicleID Int @id @default(autoincrement())
+model Vehicle {
+  id Int @id @default(autoincrement())
+  customer Customer @relation(fields: [customerID], references: [id])
+  customerID Int
   vin String
-  type String
+  vehicleType String
   year Int
   make String
   model String
-  imgUrl String
+  imgUrl String?
 }
 
-
-model customerVehicle {
-  customerVehicleID Int @id @default(autoincrement())
-  customerID Int
-  vehicleID Int
-}
 
 
 
