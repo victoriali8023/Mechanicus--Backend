@@ -19,39 +19,57 @@ exports.resolvers = {
 		createCustomer: (root, args, context) => {
 			return context.prisma.customer.create({
 				data: {
+					firstName: args.firstName,
+					lastName: args.lastName,
 					phone: args.phone,
 					email: args.email,
 					password: args.password,
+					streetAddress1: args.streetAddress1,
+					streetAddress2: args.streetAddress2,
+					city: args.city,
+					state: args.state,
+					zipcode: args.zipcode,
+
+					vehicles: [
+						{
+							vin: args.vehicles[0].vin,
+							vehicleType: args.vehicles[0].vehicleType,
+							year: args.vehicles[0].year,
+							make: args.vehicles[0].make,
+							model: args.vehicles[0].model,
+							imgUrl: args.vehicles[0].imgUrl,
+						},
+					],
 				},
 			});
 		},
+
 		updateCustomer: (root, args, context) => {
 			return context.prisma.customer.update({
 				where: {
 					id: args.id,
 				},
 				data: {
-					firstName:
-						args.input.firstName != null ? args.input.firstName : undefined,
-					lastName: args.input.lastName,
-					phone: args.input.phone,
-					email: args.input.email,
-					password: args.input.password,
-					streetAddress1: args.input.streetAddress1,
-					streetAddress2: args.input.streetAddress2,
-					city: args.input.city,
-					state: args.input.state,
-					zipcode: args.input.zipcode,
+					firstName: args.firstName,
+					lastName: args.lastName,
+					phone: args.phone,
+					email: args.email,
+					password: args.password,
+					streetAddress1: args.streetAddress1,
+					streetAddress2: args.streetAddress2,
+					city: args.city,
+					state: args.state,
+					zipcode: args.zipcode,
 
 					vehicles: {
 						create: [
 							{
-								vin: args.input.vehicles[0].vin,
-								vehicleType: args.input.vehicles[0].vehicleType,
-								year: args.input.vehicles[0].year,
-								make: args.input.vehicles[0].make,
-								model: args.input.vehicles[0].model,
-								imgUrl: args.input.vehicles[0].imgUrl,
+								vin: args.vehicles[0].vin,
+								vehicleType: args.vehicles[0].vehicleType,
+								year: args.vehicles[0].year,
+								make: args.vehicles[0].make,
+								model: args.vehicles[0].model,
+								imgUrl: args.vehicles[0].imgUrl,
 							},
 						],
 					},

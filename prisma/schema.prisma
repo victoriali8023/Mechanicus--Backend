@@ -38,7 +38,3 @@ model Vehicle {
   model String
   imgUrl String?
 }
-
-
-
-
