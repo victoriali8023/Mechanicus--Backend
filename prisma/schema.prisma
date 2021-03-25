@@ -17,7 +17,7 @@ model Customer {
   firstName String?
   lastName String?
   phone String
-  email String
+  email String @unique
   password String
   streetAddress1 String?
   streetAddress2 String?

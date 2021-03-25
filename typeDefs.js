@@ -59,9 +59,9 @@ type Mutation {
     createCustomer(
         firstName: String
         lastName: String
-        phone: String
-        email: String
-        password: String
+        phone: String!
+        email: String!
+        password: String!
         streetAddress1: String
         streetAddress2: String
         city: String
