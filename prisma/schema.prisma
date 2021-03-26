@@ -25,6 +25,24 @@ model Customer {
   state String?
   zipcode Int?
   vehicles Vehicle[]
+  quotes Quote[]
+  transactions Transaction[]
+}
+
+model Mechanic {
+  id Int @id @default(autoincrement())
+  firstName String?
+  lastName String?
+  phone String
+  email String @unique
+  password String
+  streetAddress1 String?
+  streetAddress2 String?
+  city String?
+  state String?
+  zipcode Int?
+  quotes Quote[]
+  transactions Transaction[]
 }
 
 model Vehicle {
@@ -37,4 +55,35 @@ model Vehicle {
   make String
   model String
   imgUrl String?
+  quotes Quote[]
+  transactions Transaction[]
+}
+
+model Quote {
+  id Int @id @default(autoincrement())
+  transaction Transaction?
+  customer Customer @relation(fields: [customerID], references: [id])
+  customerID Int
+  mechanic Mechanic @relation(fields: [mechanicID], references: [id])
+  mechanicID Int
+  vehicle Vehicle @relation(fields: [vehicleID], references: [id])
+  vehicleID Int
+  dateTime DateTime
+  costEstimate Float
+  description String
+}
+
+model Transaction {
+  id Int @id @default(autoincrement())
+  customer Customer @relation(fields: [customerID], references: [id])
+  customerID Int
+  mechanic Mechanic @relation(fields: [mechanicID], references: [id])
+  mechanicID Int
+  vehicle Vehicle @relation(fields: [vehicleID], references: [id])
+  vehicleID Int
+  quote Quote @relation(fields: [quoteID], references: [id])
+  quoteID Int
+  service String
+  cost Float
+  dateTime DateTime
 }
