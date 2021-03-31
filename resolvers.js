@@ -14,6 +14,29 @@ exports.resolvers = {
 				},
 			});
 		},
+
+		vehicle: (root, args, context, info) => {
+			return context.prisma.vehicle.findMany({
+				where: {
+					id: args.customerID,
+				},
+			});
+		},
+
+		quote: (root, args, context, info) => {
+			return context.prisma.quote.findMany({
+				where: {
+					id: args.customerID,
+				},
+				include: {
+					mechanician: true,
+					vehicle: true,
+					services: {
+						select: { service: true }
+					}
+				},
+			});
+		},
 	},
 	Mutation: {
 		createCustomer: (root, args, context) => {
