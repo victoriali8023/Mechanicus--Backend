@@ -1,9 +1,34 @@
 exports.typeDefs = `
 type Query {
     customers: [Customer!]!
-    customer(id:Int!): Customer!
     vehicle(customerID:Int!): [Vehicle!]!
     quote(customerID:Int!): [Quote!]! 
+    customer(id:Int, email:String, password:String): Customer
+    appointments(customerID:Int!): [Appointment!]!
+}
+
+type Subscription {
+    newCustomer: Customer
+    newAppointment(customerID:Int!): Appointment
+}
+
+type Quote {
+    id: Int 
+    transaction: Transaction
+    customerID: Int
+    mechanicID: Int
+    vehicleID: Int
+    dateTime: String
+    costEstimate: Float
+    description: String
+}
+
+type Transaction {
+        id: Int 
+        quoteID: Int
+        service: String
+        cost: Float
+        dateTime: String
 }
 
 type Customer {
@@ -19,6 +44,8 @@ type Customer {
     state: String
     zipcode: Int
     vehicles: [Vehicle]
+    quotes: [Quote]
+    appointments: [Appointment]
 }
 input VehicleInput {
     customerID: Int  
@@ -52,6 +79,7 @@ input CustomerInput {
     zipcode: Int
     vehicles: [VehicleInput]
 }
+
 
 type Service {
     id: Int
@@ -116,20 +144,25 @@ input MechanicianInput {
     quotes: [QuoteInput]
 }
 
+type Appointment {
+    id: Int
+    customerID: Int
+    dateTime: String
+    vehicle: Vehicle
+}
 
 type Mutation {
     createCustomer(
         firstName: String
         lastName: String
-        phone: String
-        email: String
-        password: String
+        phone: String!
+        email: String!
+        password: String!
         streetAddress1: String
         streetAddress2: String
         city: String
         state: String
         zipcode: Int
-        vehicles: [VehicleInput]
     ): Customer,
     updateCustomer(
         id: Int!,
@@ -144,5 +177,10 @@ type Mutation {
         state: String
         zipcode: Int
         vehicles: [VehicleInput]
-    ): Customer
+    ): Customer,
+    createAppointment(
+        customerID: Int!
+        vehicleID: Int!
+        dateTime: String
+    ): Appointment
 }`;
