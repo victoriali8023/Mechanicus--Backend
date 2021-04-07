@@ -1,9 +1,38 @@
 exports.typeDefs = `
 type Query {
     customers: [Customer!]!
+<<<<<<< HEAD
     customer(id:Int!): Customer!
     vehicle(customerID:Int!): [Vehicle!]!
     quote(customerID:Int!): [Quote!]! 
+=======
+    customer(id:Int, email:String, password:String): Customer
+    appointments(customerID:Int!): [Appointment!]!
+}
+
+type Subscription {
+    newCustomer: Customer
+    newAppointment(customerID:Int!): Appointment
+}
+
+type Quote {
+    id: Int 
+    transaction: Transaction
+    customerID: Int
+    mechanicID: Int
+    vehicleID: Int
+    dateTime: String
+    costEstimate: Float
+    description: String
+}
+
+type Transaction {
+        id: Int 
+        quoteID: Int
+        service: String
+        cost: Float
+        dateTime: String
+>>>>>>> Subscription support added, appointment model added, error handling improved
 }
 
 type Customer {
@@ -19,6 +48,8 @@ type Customer {
     state: String
     zipcode: Int
     vehicles: [Vehicle]
+    quotes: [Quote]
+    appointments: [Appointment]
 }
 input VehicleInput {
     customerID: Int  
@@ -53,6 +84,7 @@ input CustomerInput {
     vehicles: [VehicleInput]
 }
 
+<<<<<<< HEAD
 type Service {
     id: Int
     price: Float
@@ -116,6 +148,14 @@ input MechanicianInput {
     quotes: [QuoteInput]
 }
 
+=======
+type Appointment {
+    id: Int
+    customerID: Int
+    dateTime: String
+    vehicle: Vehicle
+}
+>>>>>>> Subscription support added, appointment model added, error handling improved
 
 type Mutation {
     createCustomer(
@@ -129,7 +169,6 @@ type Mutation {
         city: String
         state: String
         zipcode: Int
-        vehicles: [VehicleInput]
     ): Customer,
     updateCustomer(
         id: Int!,
