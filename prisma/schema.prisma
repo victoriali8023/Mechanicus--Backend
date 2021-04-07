@@ -26,7 +26,7 @@ model Customer {
   zipcode Int?
   vehicles Vehicle[]
   quotes Quote[]
-  transactions Transaction[]
+  appointments Appointment[]
 }
 
 model Mechanic {
@@ -42,7 +42,7 @@ model Mechanic {
   state String?
   zipcode Int?
   quotes Quote[]
-  transactions Transaction[]
+  // appointments Appointment[]
 }
 
 model Vehicle {
@@ -56,7 +56,7 @@ model Vehicle {
   model String
   imgUrl String?
   quotes Quote[]
-  transactions Transaction[]
+  appointments Appointment[]
 }
 
 model Quote {
@@ -75,15 +75,20 @@ model Quote {
 
 model Transaction {
   id Int @id @default(autoincrement())
-  customer Customer @relation(fields: [customerID], references: [id])
-  customerID Int
-  mechanic Mechanic @relation(fields: [mechanicID], references: [id])
-  mechanicID Int
-  vehicle Vehicle @relation(fields: [vehicleID], references: [id])
-  vehicleID Int
   quote Quote @relation(fields: [quoteID], references: [id])
   quoteID Int
   service String
   cost Float
   dateTime DateTime
+}
+
+model Appointment {
+  id Int @id @default(autoincrement())
+  customer Customer @relation(fields: [customerID], references: [id])
+  customerID Int
+  // mechanic Mechanic @relation(fields: [mechanicID], references: [id])
+  // mechanicID Int?
+  vehicle Vehicle @relation(fields: [vehicleID], references: [id])
+  vehicleID Int
+  dateTime String 
 }
