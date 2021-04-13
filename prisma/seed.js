@@ -1,8 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
-
 const prisma = new PrismaClient();
 
-const dummyCustomers = [
+const seedCustomers = [
 	{
 		firstName: "John",
 		lastName: "Smith",
@@ -80,89 +79,109 @@ const dummyCustomers = [
 	},
 ];
 
-const dummyServices = [
+const seedServices = [
 	{
 		price: 100,
-  		type: "Vehicle Inspection",
+		type: "Vehicle Inspection",
 	},
 	{
 		price: 110,
-  		type: "Oil change",
+		type: "Oil change",
 	},
 	{
 		price: 120,
-  		type: "Brake repair",
+		type: "Brake repair",
 	},
 	{
 		price: 130,
-  		type: "Battery replacement",
+		type: "Battery replacement",
 	},
 ];
 
-const dummyMechanician = [
+const seedMechanics = [
 	{
-		firstName: 'Michael',
-		lastName:'Williams',
+		firstName: "Michael",
+		lastName: "Williams",
 		phone: "123-456-7890",
 	},
 	{
-		firstName: 'Bill',
-		lastName:'Davis',
+		firstName: "Bill",
+		lastName: "Davis",
 		phone: "123-456-7890",
-	}
-]
-
-const dummyQuoteService = [
-	{ quoteID: 1, serviceID: 1 },
-	{ quoteID: 1, serviceID: 2 },
-	{ quoteID: 1, serviceID: 3 },
-	{ quoteID: 2, serviceID: 2 },
-	{ quoteID: 2, serviceID: 3 },
+	},
 ];
 
-const dummyQuotes = [
+// const seedQuoteServices = [
+
+// 	{ quoteID: 1, serviceID: 1 },
+// 	{ quoteID: 1, serviceID: 2 },
+// 	{ quoteID: 1, serviceID: 3 },
+// 	{ quoteID: 2, serviceID: 2 },
+// 	{ quoteID: 2, serviceID: 3 },
+// ];
+
+const seedQuotes = [
 	{
-		scheduleDate: "03/04/2021", //need to combine with Shuyang's calendar picker
+		createdAt: new Date(),
 		status: "confirm",
-		mechanicianID: 1,
+		mechanicID: 1,
 		vehicleID: 1,
 		customerID: 1,
 	},
-
 	{
-		scheduleDate: "05/04/2021", //need to combine with Shuyang's calendar picker
+		createdAt: new Date(),
 		status: "confirm",
-		mechanicianID: 2,
+		mechanicID: 2,
 		vehicleID: 2,
 		customerID: 2,
 	},
-]
+];
 
 async function main() {
-	// Create a new customer
-	for (let customer of dummyCustomers) {
-		const newCustomer = await prisma.customer.create({ data: customer });
+	// Create seed customers
+	for (let item of seedCustomers) {
+		const newRecord = await prisma.customer.create({ data: item });
 		console.log(
-			`Created new customer: ${newCustomer.firstName} (ID: ${newCustomer.id})`
+			`Created new customer: ${newRecord.firstName} (ID: ${newRecord.id})`
 		);
 	}
 
-	for (let service of dummyServices) {
-		const newService = await prisma.service.create({ data: service });
+	// Create seed services
+	for (let item of seedServices) {
+		const newEntry = await prisma.service.create({ data: item });
+		console.log(`Created new service: ${newEntry.type} (ID: ${newEntry.id})`);
+	}
+
+	//Create seed Mechanics
+	for (let item of seedMechanics) {
+		const newEntry = await prisma.mechanic.create({ data: item });
 		console.log(
-			`Created new service: ${newService.type} (ID: ${newService.id})`
+			`Created new mechanic: ${newEntry.firstName} (ID: ${newEntry.id})`
 		);
 	}
-	for (let mechanician of dummyMechanician) {
-		const newMechanician = await prisma.mechanician.create({ data: mechanician });
+
+	//Create seed Quotes
+	for (let item of seedQuotes) {
+		const newEntry = await prisma.quote.create({ data: item });
+		console.log(
+			`Created new quote: ${newEntry.createdAt} (ID: ${newEntry.id})`
+		);
 	}
-	for (let quote of dummyQuotes) {
-		const newQuote = await prisma.quote.create({ data: quote });
-	}
-	for (let quoteService of dummyQuoteService) {
-		const newQuoteService = await prisma.quoteService.create({ data: quoteService });
-	}
+
+	//Create seed QuoteServices
+	// for (let item of seedQuoteServices) {
+	// 	const newEntry = await prisma.quoteService.create({ data: item });
+	// 	console.log(
+	// 		`Created new QuoteService: (ID: ${newEntry.id})`
+	// 	);
+	// }
 }
 
-
-main().catch((e) => console.error(e));
+main()
+	.catch((e) => {
+		console.error(e);
+		process.exit(1);
+	})
+	.finally(async () => {
+		await prisma.$disconnect();
+	});

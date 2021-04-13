@@ -47,23 +47,47 @@ exports.resolvers = {
 			}
 		},
 
-		appointments: (root, args, context, info) => {
-			return context.prisma.appointment.findMany({
+		appointments: async (root, args, context, info) => {
+			let appointment = await context.prisma.appointment.findMany({
 				where: {
 					customerID: args.customerID,
 				},
 				include: {
-					vehicle: true,
+					quote: {
+						include: {
+							vehicle: true,
+						},
+					},
 				},
 			});
 		},
 
 		vehicle: (root, args, context, info) => {
-			return context.prisma.vehicle.findMany({
+			return context.prisma.vehicle.findUnique({
 				where: {
-					id: args.customerID,
+					id: args.id,
 				},
 			});
+		},
+
+		customerProfile: (root, args, context, info) => {
+			return context.prisma.customer.findUnique({
+				where: {
+					id: args.id,
+				},
+			});
+		},
+
+		vehicles: (root, args, context, info) => {
+			return context.prisma.vehicle.findMany({
+				where: {
+					customerID: args.customerID,
+				},
+			});
+		},
+
+		services: (root, args, context, info) => {
+			return context.prisma.service.findMany();
 		},
 
 		quote: (root, args, context, info) => {
@@ -72,11 +96,9 @@ exports.resolvers = {
 					id: args.customerID,
 				},
 				include: {
-					mechanician: true,
+					mechanic: true,
 					vehicle: true,
-					services: {
-						select: { service: true }
-					}
+					services: true
 				},
 			});
 		},
@@ -110,27 +132,9 @@ exports.resolvers = {
 
 			return context.prisma.customer.create({
 				data: {
-					firstName: args.firstName,
-					lastName: args.lastName,
 					phone: args.phone,
 					email: args.email,
 					password: args.password,
-					streetAddress1: args.streetAddress1,
-					streetAddress2: args.streetAddress2,
-					city: args.city,
-					state: args.state,
-					zipcode: args.zipcode,
-
-					vehicles: [
-						{
-							vin: args.vehicles[0].vin,
-							vehicleType: args.vehicles[0].vehicleType,
-							year: args.vehicles[0].year,
-							make: args.vehicles[0].make,
-							model: args.vehicles[0].model,
-							imgUrl: args.vehicles[0].imgUrl,
-						},
-					],
 				},
 			});
 		},
@@ -174,7 +178,7 @@ exports.resolvers = {
 					customerID: args.customerID,
 					vehicleID: args.vehicleID,
 					// mechanicID: args.mechanicID,
-					dateTime: args.dateTime,
+					scheduleData: args.scheduleDate,
 				},
 			});
 
