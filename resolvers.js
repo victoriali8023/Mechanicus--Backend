@@ -47,8 +47,31 @@ exports.resolvers = {
 			}
 		},
 
-		appointments: (root, args, context, info) => {
-			return context.prisma.appointment.findMany({
+		appointments: async (root, args, context, info) => {
+			let appointment = await context.prisma.appointment.findMany({
+				where: {
+					customerID: args.customerID,
+				},
+				include: {
+					quote: {
+						include: {
+							vehicle: true,
+						},
+					},
+				},
+			});
+		},
+
+		vehicle: (root, args, context, info) => {
+			return context.prisma.vehicle.findUnique({
+				where: {
+					id: args.id,
+				},
+			});
+		},
+
+		customerProfile: (root, args, context, info) => {
+			return context.prisma.customer.findUnique({
 				where: {
 					customerID: args.customerID,
 				},
@@ -71,12 +94,30 @@ exports.resolvers = {
 				where: {
 					id: args.customerID,
 				},
+			});
+		},
+
+		vehicles: (root, args, context, info) => {
+			return context.prisma.vehicle.findMany({
+				where: {
+					customerID: args.customerID,
+				},
+			});
+		},
+
+		services: (root, args, context, info) => {
+			return context.prisma.service.findMany();
+		},
+
+		quote: (root, args, context, info) => {
+			return context.prisma.quote.findMany({
+				where: {
+					id: args.customerID,
+				},
 				include: {
-					mechanician: true,
+					mechanic: true,
 					vehicle: true,
-					services: {
-						select: { service: true }
-					}
+					services: true
 				},
 			});
 		},
@@ -156,7 +197,7 @@ exports.resolvers = {
 					customerID: args.customerID,
 					vehicleID: args.vehicleID,
 					// mechanicID: args.mechanicID,
-					dateTime: args.dateTime,
+					scheduleData: args.scheduleDate,
 				},
 			});
 

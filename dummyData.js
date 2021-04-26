@@ -24,9 +24,11 @@ const dummyCustomers = [
 					model: "Focus SE",
 					imgUrl:
 						"https://file.kelleybluebookimages.com/kbb/base/evox/CP/10858/2017-Ford-Focus-front_10858_032_2400x1800_YZ.png",
+
 					appointments: {
 						create: [{ customerID: 1 }],
 					},
+
 				},
 			],
 		},

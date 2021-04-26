@@ -1,40 +1,40 @@
 exports.typeDefs = `
 type Query {
     customers: [Customer!]!
-<<<<<<< HEAD
-    customer(id:Int!): Customer!
-    vehicle(customerID:Int!): [Vehicle!]!
-    quote(customerID:Int!): [Quote!]! 
-=======
+    services(servicesList:[Int]): [Service!]!
+    vehicle(id:Int!): Vehicle!
+    vehicles(customerID:Int!): [Vehicle!]!
+    quotes(customerID:Int!): [Quote!]! 
     customer(id:Int, email:String, password:String): Customer
     appointments(customerID:Int!): [Appointment!]!
+    appointment(appointmentID:Int!): Appointment!
+    customerProfile(id:Int): Customer
 }
-
 type Subscription {
     newCustomer: Customer
     newAppointment(customerID:Int!): Appointment
+    newQuote(customerID:Int!): Quote
+    newVehicle(customerID: Int!): Vehicle
 }
-
 type Quote {
     id: Int 
     transaction: Transaction
     customerID: Int
-    mechanicID: Int
     vehicleID: Int
-    dateTime: String
+    vehicle: Vehicle
+    createdAt: String
+    status: String
     costEstimate: Float
     description: String
+    services: [Service]
 }
-
 type Transaction {
-        id: Int 
-        quoteID: Int
-        service: String
-        cost: Float
-        dateTime: String
->>>>>>> Subscription support added, appointment model added, error handling improved
+    id: Int 
+    quoteID: Int
+    service: String
+    cost: Float
+    dateTime: String
 }
-
 type Customer {
     id: Int
     firstName: String
@@ -50,6 +50,18 @@ type Customer {
     vehicles: [Vehicle]
     quotes: [Quote]
     appointments: [Appointment]
+}
+input CustomerInput {
+    firstName: String
+    lastName: String
+    phone: String
+    email: String
+    password: String
+    streetAddress1: String
+    streetAddress2: String
+    city: String
+    state: String
+    zipcode: Int
 }
 input VehicleInput {
     customerID: Int  
@@ -70,93 +82,53 @@ type Vehicle {
     model: String
     imgUrl: String
 }
-input CustomerInput {
-    firstName: String
-    lastName: String
-    phone: String
-    email: String
-    password: String
-    streetAddress1: String
-    streetAddress2: String
-    city: String
-    state: String
-    zipcode: Int
-    vehicles: [VehicleInput]
-}
-
-<<<<<<< HEAD
 type Service {
     id: Int
     price: Float
     type: String
-    quotes: [QuoteService]
+    quotes: [Quote]
 }
-
 input ServiceInput {
     customerID: Int
     price: Float
     type: String
-    quotes: [QuoteServiceInput]
+    quotes: [QuoteInput]
 }
-
-type Quote {
-    customerID: Int
-    scheduleDate: String
-    status: String
-    mechanicianID: Int
-    mechanician: Mechanician
-    vehicleID: Int
-    vehicle: Vehicle
-    services: [QuoteService]
-}
-
-input QuoteInput {
-    scheduleDate: String
-    status: String
-    services: [QuoteServiceInput]
-    mechanicianID: Int
-    vehicleID: Int
-    customerID: Int
-}
-
-type QuoteService {
-    id: Int
-    serviceID: Int
-    quoteID: Int
-    service: Service
-}
-
-input QuoteServiceInput {
-    customerID: Int
-    serviceID: Int
-    quoteID: Int
-}
-
-type Mechanician {
+type Mechanic {
     id:Int
     firstName: String
     lastName: String
     phone: String
-    quotes: [Quote]
 }
-
-input MechanicianInput {
-    customerID: Int
+input MechanicInput {
     firstName: String
     lastName: String
     phone: String
     quotes: [QuoteInput]
 }
-
-=======
+input QuoteInput {
+    scheduleDate: String
+    status: String
+    services: [ServiceInput]
+    mechanicID: Int
+    vehicleID: Int
+    customerID: Int
+}
+input QuoteServiceInput {
+    id: Int!
+}
 type Appointment {
     id: Int
+    customer: Customer
     customerID: Int
-    dateTime: String
-    vehicle: Vehicle
+    scheduleDate: String
+    quote: Quote
+    quoteID: Int
+    status: String
+    mechanic: Mechanic
+    mechanicID: Int
+    address: String
 }
->>>>>>> Subscription support added, appointment model added, error handling improved
-
 type Mutation {
     createCustomer(
         firstName: String
@@ -183,5 +155,27 @@ type Mutation {
         state: String
         zipcode: Int
         vehicles: [VehicleInput]
-    ): Customer
+    ): Customer,
+    createAppointment(
+        address: String!
+        customerID: Int!
+        quoteID: Int!
+        scheduleDate: String!
+        status: String!
+    ): Appointment,
+    createQuote(
+        costEstimate: Float!
+        customerID: Int!
+		status: String!
+        vehicleID: Int!
+        services: [Int]!
+        ): Quote,
+    createVehicle(
+        customerID: Int!
+        vin: String!
+        vehicleType: String!
+        year: Int!
+        make: String!
+        model: String!
+    ): Vehicle
 }`;
